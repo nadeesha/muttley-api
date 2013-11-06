@@ -41,6 +41,11 @@ app.get('/', function (req,res,next) {
 	res.send('hi there',200);
 });
 
+<<<<<<< HEAD
+app.get('/classrooms/:classroomId/articles/search', function (req, res, next) {
+	
+});
+=======
 app.get('/classrooms', function (req,res,next) {
 	
 	Classroom.findById(identityId, function(error, classrooms) {
@@ -59,6 +64,7 @@ app.put('/classrooms', function (req,res,next) {
 });
 
 
+>>>>>>> e44ab0ca774c6cf49decb54b2731ed619a4373b2
 
 /**
  * Start Server
