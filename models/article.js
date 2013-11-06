@@ -1,7 +1,8 @@
 var mongoose = require('mongoose'),
-	//config = require('../config/config')[env],
-	Schema = mongoose.Schema
-	//utility = require('../utility')
+	Schema = mongoose.Schema,
+	env = process.env.NODE_ENV || 'development',
+    config = require('../config')[env],
+	mongoosastic = require('mongoosastic');
 
 
 	/** 
@@ -22,6 +23,14 @@ var ArticleSchema = new Schema({
 		type: String,
 		required: true
 	}
+});
+
+// elasticsearch stuff
+ArticleSchema.plugin(mongoosastic, {
+    index: 'articles',
+    type: 'article',
+    host: config.elasticsearch.host,
+    port: config.elasticsearch.port
 });
 
 mongoose.model('Article', ArticleSchema);

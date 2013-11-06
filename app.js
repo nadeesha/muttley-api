@@ -13,12 +13,9 @@ var app = module.exports = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
 // development only
@@ -38,14 +35,26 @@ if (app.get('env') === 'production') {
 
 // serve index and view partials
 app.get('/', function (req,res,next) {
-	res.send('hi there',200);
+	res.send(501);
 });
 
-<<<<<<< HEAD
 app.get('/classrooms/:classroomId/articles/search', function (req, res, next) {
-	
+	var classroomId = req.params.classroomId;
+	var q = req.query.q;
+
+	// res.send(200, {
+	// 	classroomId: classroomId,
+	// 	q: q
+	// });
+
+	Article.search({"match_all" : { }}, function (err, results) {
+		if (err) 
+			res.send(500, err);
+
+		res.send(200, event.result)
+	})
 });
-=======
+
 app.get('/classrooms', function (req,res,next) {
 	
 	Classroom.findById(identityId, function(error, classrooms) {
@@ -62,9 +71,6 @@ app.get('/classrooms', function (req,res,next) {
 app.put('/classrooms', function (req,res,next) {
 	res.send('hi there',200);
 });
-
-
->>>>>>> e44ab0ca774c6cf49decb54b2731ed619a4373b2
 
 /**
  * Start Server
