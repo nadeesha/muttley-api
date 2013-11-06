@@ -9,6 +9,7 @@ var express = require('express'),
   path = require('path');
 
 // bootstrap db connection
+console.log("db path %s" , config.db);
 mongoose.connect(config.db);
 
 var models_path = __dirname + '/models';
@@ -76,71 +77,87 @@ app.get('/classrooms', function (req,res,next) {
 
 app.put('/classrooms', function (req,res,next) {
 	
+  console.log('doca1');
+    var error,		
+		classroom;
 
-Classroom.findOne({
-		id: req.classroom.id,
-	}, function(err, result) {
-		if (err) {
-			res.send(500);
-			return next(err);
-		}
-
-		logger.info(req.user.email);
-
-		if (!result) {
-			res.send(500);
-			logger.log('error', 'BETTER_CALL_SAUL: 8FNH46');
-			return next(err);
-		}
-
-		if (profile.firstName !== undefined) result.firstName = profile.firstName;
-		if (profile.lastName !== undefined) result.lastName = profile.lastName;
-		if (profile.dateOfBirth !== undefined) result.dateOfBirth = profile.dateOfBirth;
-		if (profile.gender !== undefined) result.gender = profile.gender;
-		if (profile.location !== undefined) result.location = profile.location;
-		if (profile.contactNumbers !== undefined) result.contactNumbers = profile.contactNumbers;
-		if (profile.nationalIdentifier !== undefined) result.nationalIdentifier = profile.nationalIdentifier;
-		if (profile.isLookingOut !== undefined) result.isLookingOut = profile.isLookingOut;
-		if (profile.languages !== undefined) result.languages = profile.languages;
-		if (profile.tenures !== undefined) result.tenures = profile.tenures;
-		if (profile.skills !== undefined) result.skills = profile.skills;
-		if (profile.qualifications !== undefined) result.qualifications = profile.qualifications;
-
-		result.save(function(err, saved) {
-			if (err && err.name === 'ValidationError') {
-				error = {
-					type: 'Validation',
-					message: err.Messages
-				};
-
-				res.send(400, {
-					error: error
-				});
-
-				logger.log('info', 'Validation error encountered while saving the "user".', {
-					input: JSON.stringify(user),
-					output: JSON.stringify(err)
-				});
-
-				return next(error.message);
-
-			} else if (err) { // if not validation, then this is probably an internal error
-				res.send(500);
-
-
-				logger.log('error', 'Error encountered while saving the following "user".', {
-					input: JSON.stringify(user),
-					output: JSON.stringify(err.Messages)
-				});
-
-				return next(error.output);
-			}
-
-			res.send(200, saved);
-		});
+	var croom = new Classroom({
+		name: "foo",
+		url: "bar"
 	});
 
+	croom.save(function (err, saved) {
+		if (err)
+			res.send(500, err);
+		else
+			res.send(200, saved);
+	})
 
+	// parsin JSON
+	// try {
+	// 	classroom = JSON.parse(req.body.classroom);
+	// } catch (e) {
+	// 	error = {
+	// 		type: 'Validation',
+	// 		message: 'Invalid JSON'
+	// 	};
+
+	// 	res.send(400, error);
+	// 	return next(error.message);
+	// }
+
+
+	// Classroom.findOne({
+	// 	id: req.classroom.id,
+	// }, function(err, result) {
+	// 	if (err) {
+	// 		res.send(500);
+	// 		return next(err);
+	// 	}
+		
+	// 	if (!result) {
+	// 		res.send(500);
+	// 		logger.log('error', 'BETTER_CALL_SAUL: 8FNH46');
+	// 		return next(err);
+	// 	}
+
+	// 	if (classroom.name !== undefined) result.name = classroom.name;
+	// 	if (classroom.url !== undefined) result.url = classroom.url;
+	
+
+	// 	result.save(function(err, saved) {
+	// 		if (err && err.name === 'ValidationError') {
+	// 			error = {
+	// 				type: 'Validation',
+	// 				message: err.Messages
+	// 			};
+
+	// 			res.send(400, {
+	// 				error: error
+	// 			});
+
+	// 			logger.log('info', 'Validation error encountered while saving the "user".', {
+	// 				input: JSON.stringify(classroom),
+	// 				output: JSON.stringify(err)
+	// 			});
+
+	// 			return next(error.message);
+
+	// 		} else if (err) { // if not validation, then this is probably an internal error
+	// 			res.send(500);
+
+
+	// 			logger.log('error', 'Error encountered while saving the following "user".', {
+	// 				input: JSON.stringify(user),
+	// 				output: JSON.stringify(err.Messages)
+	// 			});
+
+	// 			return next(error.output);
+	// 		}
+
+	// 		res.send(200, saved);
+	// 	});
+	// });
 
 });
 
