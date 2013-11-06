@@ -42,10 +42,19 @@ app.get('/', function (req,res,next) {
 });
 
 app.get('/classrooms', function (req,res,next) {
-	res.send('hi there',200);
+	
+	Classroom.findById(identityId, function(error, classrooms) {
+	      if(error) {
+	         res.send(error,500);
+	      }
+	      else {
+			 res.send(classrooms,200);
+	      }
+	  });
+
 });
 
-app.put('/', function (req,res,next) {
+app.put('/classrooms', function (req,res,next) {
 	res.send('hi there',200);
 });
 
