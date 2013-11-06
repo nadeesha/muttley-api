@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "express": "~3.4.4",
-    "mongoose" :"latest"
+    "mongoose": "latest",
+    "mongoosastic": "~0.2.0"
   }
 }
