@@ -20,6 +20,7 @@
   "dependencies": {
     "express": "~3.4.4",
     "mongoose": "latest",
-    "mongoosastic": "~0.2.0"
+    "mongoosastic": "~0.2.0",
+    "amqplib": "0.1.0"
   }
 }

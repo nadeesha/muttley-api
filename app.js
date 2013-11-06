@@ -6,6 +6,7 @@ var express = require('express'),
   	env = process.env.NODE_ENV || 'development',
 	config = require('./config')[env],
   mongoose = require('mongoose'),
+  amqp = require ('./amqp'),
   path = require('path');
 
 // bootstrap db connection
@@ -54,10 +55,7 @@ app.get('/', function (req,res,next) {
 	res.send(501);
 });
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 2aa46283bcf8508ff019cf9b2aef2c0a557cf988
 app.get('/classrooms/:classroomId/articles/search', function (req, res, next) {
 	var classroomId = req.params.classroomId;
 	var q = req.query.q;
@@ -77,6 +75,8 @@ app.get('/classrooms/:classroomId/articles/search', function (req, res, next) {
 
 app.get('/classrooms', function (req,res,next) {
 	
+	amqp.send('doca message 1');
+	amqp.send('doca message 2');
 	Classroom.find({},function(error, classrooms) {
 	      if(error) {
 	         res.send(error,500);
@@ -177,17 +177,23 @@ app.put('/classrooms', function (req,res,next) {
 
 });
 
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> 2aa46283bcf8508ff019cf9b2aef2c0a557cf988
+function indexContent(msg) {
+      if (msg !== null) {
+        console.log(msg.content.toString());
+        //ch.ack(msg);
+      }
+  }
+
+amqp.initializeConsumer(indexContent);
+
 /**
  * Start Server
  */
-
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
   console.log('Loaded config: ' +  app.get('env'));
 });
+
