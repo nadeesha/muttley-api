@@ -9,13 +9,7 @@ var mongoose = require('mongoose'),
  =================================================*/
 
 var ArticleSchema = new Schema({
-	id: {
-		type: String,
-		required: true,
-		lowercase: true,
-		trim: true,
-		unique: true
-	},
+	
 	title: {
 		type: String,
 		required: true
@@ -29,6 +23,8 @@ var ArticleSchema = new Schema({
 		required: true
 	}
 });
+
+
 
 var TenureSchema = new Schema({
 	position: {

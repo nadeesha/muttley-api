@@ -9,13 +9,6 @@ var mongoose = require('mongoose'),
  =================================================*/
 
 var ClassroomSchema = new Schema({
-	id: {
-		type: String,
-		required: true,
-		lowercase: true,
-		trim: true,
-		unique: true
-	},
 	name: {
 		type: String,
 		required: true
