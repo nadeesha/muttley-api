@@ -1,5 +1,7 @@
 var express = require('express'),
   http = require('http'),
+  Classroom      = require('./models/classroom'),
+  Article      = require('./models/article'),
   path = require('path');
 
 var app = module.exports = express();
@@ -36,8 +38,17 @@ if (app.get('env') === 'production') {
 
 // serve index and view partials
 app.get('/', function (req,res,next) {
-	res.send(501);
+	res.send('hi there',200);
 });
+
+app.get('/classrooms', function (req,res,next) {
+	res.send('hi there',200);
+});
+
+app.put('/', function (req,res,next) {
+	res.send('hi there',200);
+});
+
 
 
 /**
