@@ -1,8 +1,24 @@
 var express = require('express'),
   http = require('http'),
-  Classroom      = require('./models/classroom'),
-  Article      = require('./models/article'),
+  //Classroom      = require('./models/classroom'),
+  //Article      = require('./models/article'),
+  fs              = require('fs'),
+  	env = process.env.NODE_ENV || 'development',
+	config = require('./config')[env],
+  mongoose = require('mongoose'),
   path = require('path');
+
+// bootstrap db connection
+console.log("db path %s" , config.db);
+mongoose.connect(config.db);
+
+var models_path = __dirname + '/models';
+fs.readdirSync(models_path).forEach(function(file) {
+	if (~file.indexOf('.js')) require(models_path + '/' + file)
+});
+  
+var Classroom = mongoose.model('Classroom');
+
 
 var app = module.exports = express();
 
@@ -38,6 +54,10 @@ app.get('/', function (req,res,next) {
 	res.send(501);
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2aa46283bcf8508ff019cf9b2aef2c0a557cf988
 app.get('/classrooms/:classroomId/articles/search', function (req, res, next) {
 	var classroomId = req.params.classroomId;
 	var q = req.query.q;
@@ -57,7 +77,7 @@ app.get('/classrooms/:classroomId/articles/search', function (req, res, next) {
 
 app.get('/classrooms', function (req,res,next) {
 	
-	Classroom.findById(identityId, function(error, classrooms) {
+	Classroom.find({},function(error, classrooms) {
 	      if(error) {
 	         res.send(error,500);
 	      }
@@ -69,9 +89,97 @@ app.get('/classrooms', function (req,res,next) {
 });
 
 app.put('/classrooms', function (req,res,next) {
-	res.send('hi there',200);
+	
+  console.log('doca1');
+    var error,		
+		classroom;
+
+	var croom = new Classroom({
+		name: "foo",
+		url: "bar"
+	});
+
+	croom.save(function (err, saved) {
+		if (err)
+			res.send(500, err);
+		else
+			res.send(200, saved);
+	})
+
+	// parsin JSON
+	// try {
+	// 	classroom = JSON.parse(req.body.classroom);
+	// } catch (e) {
+	// 	error = {
+	// 		type: 'Validation',
+	// 		message: 'Invalid JSON'
+	// 	};
+
+	// 	res.send(400, error);
+	// 	return next(error.message);
+	// }
+
+
+	// Classroom.findOne({
+	// 	id: req.classroom.id,
+	// }, function(err, result) {
+	// 	if (err) {
+	// 		res.send(500);
+	// 		return next(err);
+	// 	}
+		
+	// 	if (!result) {
+	// 		res.send(500);
+	// 		logger.log('error', 'BETTER_CALL_SAUL: 8FNH46');
+	// 		return next(err);
+	// 	}
+
+	// 	if (classroom.name !== undefined) result.name = classroom.name;
+	// 	if (classroom.url !== undefined) result.url = classroom.url;
+	
+
+	// 	result.save(function(err, saved) {
+	// 		if (err && err.name === 'ValidationError') {
+	// 			error = {
+	// 				type: 'Validation',
+	// 				message: err.Messages
+	// 			};
+
+	// 			res.send(400, {
+	// 				error: error
+	// 			});
+
+	// 			logger.log('info', 'Validation error encountered while saving the "user".', {
+	// 				input: JSON.stringify(classroom),
+	// 				output: JSON.stringify(err)
+	// 			});
+
+	// 			return next(error.message);
+
+	// 		} else if (err) { // if not validation, then this is probably an internal error
+	// 			res.send(500);
+
+
+	// 			logger.log('error', 'Error encountered while saving the following "user".', {
+	// 				input: JSON.stringify(user),
+	// 				output: JSON.stringify(err.Messages)
+	// 			});
+
+	// 			return next(error.output);
+	// 		}
+
+	// 		res.send(200, saved);
+	// 	});
+	// });
+
 });
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 2aa46283bcf8508ff019cf9b2aef2c0a557cf988
 /**
  * Start Server
  */
