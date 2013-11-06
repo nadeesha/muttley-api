@@ -9,8 +9,8 @@ var express = require('express'),
     request = require('request'),
     mashape_key = process.env.MASHAPE_KEY,
     pm = require('pagemunch'),
-	amqp = require ('./amqp'),
-  	path = require('path');
+    amqp = require('./amqp'),
+    path = require('path');
 
 
 // pagemunch api key
@@ -19,14 +19,14 @@ pm.set({
 });
 
 // bootstrap db connection
-console.log("db path %s" , config.db);
+console.log("db path %s", config.db);
 mongoose.connect(config.db);
 
 var models_path = __dirname + '/models';
 fs.readdirSync(models_path).forEach(function(file) {
-	if (~file.indexOf('.js')) require(models_path + '/' + file)
+    if (~file.indexOf('.js')) require(models_path + '/' + file)
 });
-  
+
 var Classroom = mongoose.model('Classroom');
 var Article = mongoose.model('Article');
 
@@ -52,13 +52,26 @@ if (app.get('env') === 'development') {
 
 // production only
 if (app.get('env') === 'production') {
-  // TODO
+    // TODO
 };
 
 
 /**
  * Routes
  */
+
+app.all('*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'HEAD, GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Origin, Accept, Authorization, x-csrf-token');
+    res.header('Access-Control-Allow-Credentials', 'true');
+
+    if (req.method.toLowerCase() === 'options') {
+        res.send(200);
+    } else {
+        next();
+    }
+});
 
 app.get('/', function(req, res, next) {
     res.send(501);
@@ -90,22 +103,21 @@ app.get('/classrooms/:classroomId/articles/search', function(req, res, next) {
     })
 });
 
-app.get('/classrooms', function (req,res,next) {
-	
-	amqp.send('doca message 1');
-	amqp.send('doca message 2');
-	Classroom.find({},function(error, classrooms) {
-	      if(error) {
-	         res.send(error,500);
-	      }
-	      else {
-			 res.send(classrooms,200);
-	      }
-	  });
+app.get('/classrooms', function(req, res, next) {
+
+    amqp.send('doca message 1');
+    amqp.send('doca message 2');
+    Classroom.find({}, function(error, classrooms) {
+        if (error) {
+            res.send(error, 500);
+        } else {
+            res.send(classrooms, 200);
+        }
+    });
 
 });
 
-app.put('/classrooms', function (req,res,next) {
+app.put('/classrooms', function(req, res, next) {
 
     var croom = new Classroom({
         name: req.body.name
@@ -134,7 +146,7 @@ app.get('/classrooms/:classroomId/articles', function(req, res, next) {
 });
 
 app.put('/classrooms/:classroomId/articles', function(req, res, next) {
-	console.log('----' + JSON.stringify(req.body));
+    console.log('----' + JSON.stringify(req.body));
     var url = req.body.url;
     var summary, keywords = [];
 
@@ -188,11 +200,11 @@ app.put('/classrooms/:classroomId/articles', function(req, res, next) {
                 res.send(500, err);
                 console.log(err);
             } else {
-        		body = JSON.parse(body);
+                body = JSON.parse(body);
                 console.log('Got title');
-        		console.log('-----', body);
+                console.log('-----', body);
                 article.title = body.title;
-        		console.log(article);
+                console.log(article);
 
                 var options = {
                     url: "https://alchemy.p.mashape.com/url/URLGetText",
@@ -212,13 +224,13 @@ app.put('/classrooms/:classroomId/articles', function(req, res, next) {
                     body = JSON.parse(body);
 
                     console.log('Got raw text');
-        			console.log('-----', body);
+                    console.log('-----', body);
                     article.text = body.text;
-        			console.log(article);
+                    console.log(article);
 
                     article.save(function(err, obj) {
-                    	if (err)
-                    		res.send(500, err);
+                        if (err)
+                            res.send(500, err);
 
                         res.send(201, {
                             id: obj._id
@@ -245,11 +257,11 @@ app.del('/classrooms/:classroomId/articles/:articleId', function(req, res, next)
 });
 
 function indexContent(msg) {
-      if (msg !== null) {
+    if (msg !== null) {
         console.log(msg.content.toString());
         //ch.ack(msg);
-      }
-  }
+    }
+}
 
 amqp.initializeConsumer(indexContent);
 

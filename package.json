@@ -1,7 +1,7 @@
 {
   "name": "muttley-api",
   "version": "0.0.0",
-  "description": "muttley-api ===========",
+  "description": "muttley-api",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +23,7 @@
     "mongoosastic": "~0.2.0",
     "process": "~0.5.1",
     "request": "~2.27.0",
-    "pagemunch": "~0.1.0"
+    "pagemunch": "~0.1.0",
     "amqplib": "0.1.0"
   }
 }
