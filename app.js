@@ -39,6 +39,9 @@ app.get('/', function (req,res,next) {
 	res.send(501);
 });
 
+app.get('/classrooms/:classroomId/articles/search', function (req, res, next) {
+	
+});
 
 /**
  * Start Server
