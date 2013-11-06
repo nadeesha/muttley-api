@@ -8,7 +8,10 @@ var express = require('express'),
     path = require('path'),
     request = require('request'),
     mashape_key = process.env.MASHAPE_KEY,
-    pm = require('pagemunch');
+    pm = require('pagemunch'),
+	amqp = require ('./amqp'),
+  	path = require('path');
+
 
 // pagemunch api key
 pm.set({
@@ -16,14 +19,14 @@ pm.set({
 });
 
 // bootstrap db connection
-console.log("db path %s", config.db);
+console.log("db path %s" , config.db);
 mongoose.connect(config.db);
 
 var models_path = __dirname + '/models';
 fs.readdirSync(models_path).forEach(function(file) {
-    if (~file.indexOf('.js')) require(models_path + '/' + file)
+	if (~file.indexOf('.js')) require(models_path + '/' + file)
 });
-
+  
 var Classroom = mongoose.model('Classroom');
 var Article = mongoose.model('Article');
 
@@ -49,7 +52,7 @@ if (app.get('env') === 'development') {
 
 // production only
 if (app.get('env') === 'production') {
-    // TODO
+  // TODO
 };
 
 
@@ -87,14 +90,19 @@ app.get('/classrooms/:classroomId/articles/search', function(req, res, next) {
     })
 });
 
-app.get('/classrooms', function(req, res, next) {
-    Classroom.find({}, function(error, classrooms) {
-        if (error) {
-            res.send(error, 500);
-        } else {
-            res.send(classrooms, 200);
-        }
-    });
+app.get('/classrooms', function (req,res,next) {
+	
+	amqp.send('doca message 1');
+	amqp.send('doca message 2');
+	Classroom.find({},function(error, classrooms) {
+	      if(error) {
+	         res.send(error,500);
+	      }
+	      else {
+			 res.send(classrooms,200);
+	      }
+	  });
+
 });
 
 app.put('/classrooms', function (req,res,next) {
@@ -235,6 +243,15 @@ app.del('/classrooms/:classroomId/articles/:articleId', function(req, res, next)
 
     res.send(501);
 });
+
+function indexContent(msg) {
+      if (msg !== null) {
+        console.log(msg.content.toString());
+        //ch.ack(msg);
+      }
+  }
+
+amqp.initializeConsumer(indexContent);
 
 /**
  * Start Server
