@@ -77,14 +77,14 @@ app.get('/classrooms', function (req,res,next) {
 
 app.put('/classrooms', function (req,res,next) {
 	
-  console.log('doca1');
-    var error,		
+      var error,		
 		classroom;
 
+	console.log(req.body);
 
 		// parsin JSON
 	try {
-		classroom = JSON.parse(req.body.classroom);
+		classroom = req.body;
 	} catch (e) {
 		error = {
 			type: 'Validation',
