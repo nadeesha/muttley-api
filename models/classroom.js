@@ -20,9 +20,4 @@ var ClassroomSchema = new Schema({
 });
 
 
-
-/** 
- * model.
- =================================================*/
-
 mongoose.model('Classroom', ClassroomSchema);

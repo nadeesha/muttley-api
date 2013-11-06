@@ -10,14 +10,23 @@ var mongoose = require('mongoose'),
  =================================================*/
 
 var ArticleSchema = new Schema({
-	
+	classroom: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'ClassroomSchema',
+		required: true
+	},
 	title: {
 		type: String,
 		required: true
 	},
 	summary: {
 		type: String,
-		required: false
+		required: true
+	},
+	keywords: [String],
+	text: {
+		type: String,
+		required: true
 	},
 	url: {
 		type: String,
