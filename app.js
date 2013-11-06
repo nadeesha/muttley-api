@@ -120,60 +120,6 @@ app.put('/classrooms', function (req,res,next) {
 			res.send(200, saved);
 	})
 
-	
-
-
-	// Classroom.findOne({
-	// 	id: req.classroom.id,
-	// }, function(err, result) {
-	// 	if (err) {
-	// 		res.send(500);
-	// 		return next(err);
-	// 	}
-		
-	// 	if (!result) {
-	// 		res.send(500);
-	// 		logger.log('error', 'BETTER_CALL_SAUL: 8FNH46');
-	// 		return next(err);
-	// 	}
-
-	// 	if (classroom.name !== undefined) result.name = classroom.name;
-	// 	if (classroom.url !== undefined) result.url = classroom.url;
-	
-
-	// 	result.save(function(err, saved) {
-	// 		if (err && err.name === 'ValidationError') {
-	// 			error = {
-	// 				type: 'Validation',
-	// 				message: err.Messages
-	// 			};
-
-	// 			res.send(400, {
-	// 				error: error
-	// 			});
-
-	// 			logger.log('info', 'Validation error encountered while saving the "user".', {
-	// 				input: JSON.stringify(classroom),
-	// 				output: JSON.stringify(err)
-	// 			});
-
-	// 			return next(error.message);
-
-	// 		} else if (err) { // if not validation, then this is probably an internal error
-	// 			res.send(500);
-
-
-	// 			logger.log('error', 'Error encountered while saving the following "user".', {
-	// 				input: JSON.stringify(user),
-	// 				output: JSON.stringify(err.Messages)
-	// 			});
-
-	// 			return next(error.output);
-	// 		}
-
-	// 		res.send(200, saved);
-	// 	});
-	// });
 
 });
 

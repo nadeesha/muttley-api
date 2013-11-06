@@ -15,7 +15,7 @@ var ClassroomSchema = new Schema({
 	},
 	url: {
 		type: String,
-		required: true
+		required: false
 	}
 });
 
