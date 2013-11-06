@@ -81,30 +81,33 @@ app.put('/classrooms', function (req,res,next) {
     var error,		
 		classroom;
 
-	var croom = new Classroom({
-		name: "foo",
-		url: "bar"
+
+		// parsin JSON
+	try {
+		classroom = JSON.parse(req.body.classroom);
+	} catch (e) {
+		error = {
+			type: 'Validation',
+			message: 'Invalid JSON'
+		};
+
+		res.send(400, error);
+		return next(error.message);
+	}
+
+	var classroomSave = new Classroom({
+		name: classroom.name,
+		url: classroom.url
 	});
 
-	croom.save(function (err, saved) {
+	classroomSave.save(function (err, saved) {
 		if (err)
 			res.send(500, err);
 		else
 			res.send(200, saved);
 	})
 
-	// parsin JSON
-	// try {
-	// 	classroom = JSON.parse(req.body.classroom);
-	// } catch (e) {
-	// 	error = {
-	// 		type: 'Validation',
-	// 		message: 'Invalid JSON'
-	// 	};
-
-	// 	res.send(400, error);
-	// 	return next(error.message);
-	// }
+	
 
 
 	// Classroom.findOne({
