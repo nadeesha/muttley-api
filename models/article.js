@@ -24,4 +24,4 @@ var ArticleSchema = new Schema({
 	}
 });
 
-mongoose.model('Classroom', ClassroomSchema);
+mongoose.model('Article', ArticleSchema);
