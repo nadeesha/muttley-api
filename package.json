@@ -24,6 +24,7 @@
     "process": "~0.5.1",
     "request": "~2.27.0",
     "pagemunch": "~0.1.0",
-    "amqplib": "0.1.0"
+    "amqplib": "0.1.0",
+    "ws": "0.4.x"
   }
 }

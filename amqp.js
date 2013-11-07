@@ -1,13 +1,21 @@
-var q = 'tasks';
+
 
 var open = require('amqplib').connect('amqp://Qp8zIdXt:VEO28i7KfIzsRoS-TbzbE-bSDewZDmW_@brown-toadflax-10.bigwig.lshift.net:10686/cVDHQx-GprcK');
 
 module.exports.send = function (messageToDelever)
 {
 // Publisher
+
+//var q = "tasks" + hashCode();
+console.log("ws.upgradeReq.url" + messageToDelever.url);
+var q = "tasks" + hashCode();
+
+console.log("seding message : " + messageToDelever.url);
+console.log("seding message to q: " + q);
 open.then(function(conn) {
   var ok = conn.createChannel();
   ok = ok.then(function(ch) {
+
     ch.assertQueue(q);
     ch.sendToQueue(q, new Buffer(messageToDelever));
   });
@@ -16,15 +24,21 @@ open.then(function(conn) {
 
 }
 
-module.exports.initializeConsumer = function(workerCallback){
+module.exports.initializeConsumer = function(workerCallback,ws){
 // Consumer
+
+console.log("ws.upgradeReq.url" + ws.upgradeReq.url);
+
+var q = "tasks" + hashCode(ws.upgradeReq.url);
+
 open.then(function(conn) {
   console.log("consumer initialized");
   var ok = conn.createChannel();
   ok = ok.then(function(ch) {
     ch.assertQueue(q);
+    console.log("going to listen on q: " + q);
     ch.consume(q, function(msg){
-    	workerCallback(msg);
+    	workerCallback(msg,ws);
     	ch.ack(msg);
     });
     //todo ack should be send after process is done. DOCA
@@ -33,4 +47,16 @@ open.then(function(conn) {
   return ok;
 }).then(null, console.warn);
 
+}
+
+
+function hashCode(stringToHash){
+    var hash = 0, i, char;
+    if (stringToHash.length == 0) return hash;
+    for (i = 0, l = stringToHash.length; i < l; i++) {
+        char  = stringToHash.charCodeAt(i);
+        hash  = ((hash<<5)-hash)+char;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
 }
