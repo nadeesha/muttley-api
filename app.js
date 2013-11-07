@@ -84,6 +84,7 @@ app.get('/classrooms/:classroomId/articles/search', function(req, res, next) {
     var q = req.query.q;
 
     var q = {
+        fields: ['title', 'url', 'summary', 'keywords'],
         query: {
             fuzzy: {
                 text: req.query.q
@@ -91,7 +92,7 @@ app.get('/classrooms/:classroomId/articles/search', function(req, res, next) {
         }
     }
 
-    Article.search(q, function(err, results) {
+    Article.search(q, {}, function(err, results) {
         console.log('searching...');
 
         if (err) {
@@ -105,8 +106,8 @@ app.get('/classrooms/:classroomId/articles/search', function(req, res, next) {
 
 app.get('/classrooms', function(req, res, next) {
 
-    amqp.send('doca message 1');
-    amqp.send('doca message 2');
+    // amqp.send('doca message 1');
+    // amqp.send('doca message 2');
     Classroom.find({}, function(error, classrooms) {
         if (error) {
             res.send(error, 500);
@@ -148,7 +149,7 @@ app.put('/classrooms', function(req, res, next) {
 app.get('/classrooms/:classroomId/articles', function(req, res, next) {
     Article.find({
         classroom: req.params.classroomId
-    } ['summary', 'title', 'url', 'classroom', 'keywords'], function(error, articles) {
+    }, 'summary title url classroom keywords', function(error, articles) {
         if (error) {
             res.send(500, error);
         } else {
