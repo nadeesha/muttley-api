@@ -117,6 +117,18 @@ app.get('/classrooms', function(req, res, next) {
 
 });
 
+app.get('/classrooms/:classroomId', function(req, res, next) {
+
+    Classroom.findOne({_id:req.params.classroomId}, function(error, classroom) {
+        if (error) {
+            res.send(error, 500);
+        } else {
+            res.send(classroom, 200);
+        }
+    });
+
+});
+
 app.put('/classrooms', function(req, res, next) {
 
     var croom = new Classroom({
@@ -136,7 +148,7 @@ app.put('/classrooms', function(req, res, next) {
 app.get('/classrooms/:classroomId/articles', function(req, res, next) {
     Article.find({
         classroom: req.params.classroomId
-    }, function(error, articles) {
+    } ['summary', 'title', 'url', 'classroom', 'keywords'], function(error, articles) {
         if (error) {
             res.send(500, error);
         } else {
