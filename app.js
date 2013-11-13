@@ -178,111 +178,10 @@ app.put('/classrooms/:classroomId/articles', function(req, res, next) {
         classroomId: req.params.classroomId
     }
 
-    //starts listning on websocket 
-    //startListn(req.body.url);
-
-    //setTimeout((function() {
-
-        //send the message out to rabbit
-
+    //send the message out to rabbit
     amqp.send(amqpMessage, req.url);
     res.send(201);
-    //}), 1000);
 
-
-
-
-
-    // var options = {
-    // 	uri: 'https://tldr.p.mashape.com/summary',
-    // 	qs: {
-    // 		url: url
-    // 	},
-    // 	headers: {}
-    // }
-
-    // options.headers["X-Mashape-Authorization"] = mashape_key;
-
-
-    // request.get(options, function(err, r, body) {
-    // 	if (err)
-    // 		res.send(500, err);
-
-    // 	body = JSON.parse(body);
-
-    // 	console.log('Got summary');
-
-    // 	console.log('-----', body);
-
-    // 	summary = body.data.summary;
-    // 	keywords = body.data.keywords;
-
-    // 	var article = new Article({
-    // 		url: url,
-    // 		summary: summary,
-    // 		keywords: keywords,
-    // 		classroom: req.params.classroomId
-    // 	});
-
-    // 	console.log(article);
-
-    // 	var options = {
-    // 		uri: 'https://alchemy.p.mashape.com/url/URLGetTitle',
-    // 		qs: {
-    // 			url: url,
-    // 			outputMode: "json"
-    // 		},
-    // 		headers: {}
-    // 	}
-
-    // 	options.headers["X-Mashape-Authorization"] = mashape_key;
-
-    // 	// pagemunch summary
-    // 	request.get(options, function(err, r, body) {
-    // 		if (err) {
-    // 			res.send(500, err);
-    // 			console.log(err);
-    // 		} else {
-    // 			body = JSON.parse(body);
-    // 			console.log('Got title');
-    // 			console.log('-----', body);
-    // 			article.title = body.title;
-    // 			console.log(article);
-
-    // 			var options = {
-    // 				url: "https://alchemy.p.mashape.com/url/URLGetText",
-    // 				qs: {
-    // 					url: url,
-    // 					outputMode: "json"
-    // 				},
-    // 				headers: {}
-    // 			}
-
-    // 			options.headers["X-Mashape-Authorization"] = mashape_key;
-
-    // 			request.get(options, function(err, r, body) {
-    // 				if (err)
-    // 					res.send(500, err);
-
-    // 				body = JSON.parse(body);
-
-    // 				console.log('Got raw text');
-    // 				console.log('-----', body);
-    // 				article.text = body.text;
-    // 				console.log(article);
-
-    // 				article.save(function(err, obj) {
-    // 					if (err)
-    // 						res.send(500, err);
-
-    // 					res.send(201, {
-    // 						id: obj._id
-    // 					});
-    // 				});
-    // 			});
-    // 		}
-    // 	})
-    // });
 });
 
 app.del('/classrooms/:classroomId/articles/:articleId', function(req, res, next) {
@@ -307,10 +206,7 @@ function indexContentTest(msg, ws) {
                             ws.send(JSON.stringify({
                             id: "55555"
                             }), function(err) { 
-//console.log("send error");
-                                //console.log(err);
-                                //if (err == 'undefined')
-                                //ws.close();
+
                             });
 
                             
@@ -322,7 +218,6 @@ function indexContent(msg, ws) {
     if (msg !== null) {
         console.log(msg.content.toString());
 
-        ///////////////
 
     var options = {
         uri: 'https://tldr.p.mashape.com/summary',
