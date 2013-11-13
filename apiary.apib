@@ -1,0 +1,94 @@
+FORMAT: 1A
+HOST: http://www.google.com
+
+# Notes API
+Notes API is a *short texts saving* service similar to its physical paper presence on your table.
+
+# Group Notes
+Notes related resources of the **Notes API**
+
+## Classrooms [/classrooms]
+### List all classrooms [GET]
++ Response 200 (application/json)
+
+        [{
+          "id": "hjg2jh3g523hjg2j3h4ghjg23jh4",
+          "name": "Comets"
+        }, {
+          "id": "hjg2jh3g523hjg2j3h4ghjg23jh4",
+          "name": "Stars"
+        }]
+
+### Create a Classroom [PUT]
++ Request (application/json)
+
+        {"name": "Galaxies"}
+
++ Response 200 (application/json)
+
+        [{
+            "id": "hjg2jh3g523hjg2j3h4ghjg23jh4",
+            "name": "Galaxies",
+            "url": "http://www.example-frontend.com/classroom/Galaxies"
+        }]
+
+
+## Articles [/classrooms/{name}/articles]
+
++ Parameters
+    + name (required, string, `Astronomy`) ... Name of the classroom.
+
+### Retrieve articles [GET]
++ Response 200 (application/json)
+
+    + Body
+
+            [{
+                "id": "hjg2jh3g523hjg2j3h4ghjg23jh4",
+                "title": "Comets are to hit Mars in 2020",
+                "summary": ["This is sometthing.", "This is something else", "This is that thing"],
+                "url": "http://www.example.com/foobarbaz"
+                }, {
+                "id": "hjg2jh3g523hjg2j3h4ghjg23jh4",
+                "title": "Comets are to hit Earth in 2021",
+                "summary": ["This is sometthing.", "This is something else", "This is that thing"],
+                "url": "http://www.example.com/foobarbaz"
+            }]
+            
+### Create a article [PUT]
++ Request (application/json)
+
+        {"url": "http://www.example.com/foobarbaz"}
+        
++ Response 201
+    
+### Remove a Article [DELETE]
++ Request (application/json)
+
+        {"url": "http://www.example.com/foobarbaz"}
+        
++ Response 200
+
+## Articles Search [/classrooms/{name}/articles/search?q={query}]
+
++ Parameters
+    + name (required, string, `Astronomy`) ... Name of the classroom.
+    + query (required, string, `Nibiru 2020`) ... Query to search within the articles
+
+### Search for articles [GET]
+
++ Response 200 (application/json)
+
+    + Body
+
+            [{
+                "id": "hjg2jh3g523hjg2j3h4ghjg23jh4",
+                "title": "Comets are to hit Mars in 2020",
+                "summary": ["This is sometthing.", "This is something else", "This is that thing"],
+                "url": "http://www.example.com/foobarbaz"
+                }, {
+                "id": "hjg2jh3g523hjg2j3h4ghjg23jh4",
+                "title": "Comets are to hit Earth in 2021",
+                "summary": ["This is sometthing.", "This is something else", "This is that thing"],
+                "url": "http://www.example.com/foobarbaz"
+            }]

@@ -110,7 +110,13 @@ app.get('/classrooms/:classroomId/articles/search', function(req, res, next) {
 
 app.get('/classrooms', function(req, res, next) {
 
+<<<<<<< HEAD
+
+    //amqp.send('doca message 2');
+=======
+    // amqp.send('doca message 1');
     // amqp.send('doca message 2');
+>>>>>>> a0dd9e678d01c4a3989921643c36b69129eb799f
     Classroom.find({}, function(error, classrooms) {
         if (error) {
             res.send(error, 500);
@@ -154,9 +160,24 @@ app.put('/classrooms', function(req, res, next) {
 // articles
 
 app.get('/classrooms/:classroomId/articles', function(req, res, next) {
+
     Article.find({
         classroom: req.params.classroomId
+    }, function(error, articles) {
+        if (error) {
+            res.send(500, error);
+        } else {
+            res.send(200, articles);
+        }
+    });
+
+    Article.find({
+        classroom: req.params.classroomId
+<<<<<<< HEAD
+    }['summary', 'title', 'url', 'classroom', 'keywords'], function(error, articles) {
+=======
     }, 'summary title url classroom keywords', function(error, articles) {
+>>>>>>> a0dd9e678d01c4a3989921643c36b69129eb799f
         if (error) {
             res.send(500, error);
         } else {
@@ -305,87 +326,87 @@ function indexContent(msg, ws) {
 
         ///////////////
 
-    var options = {
-        uri: 'https://tldr.p.mashape.com/summary',
-        qs: {
-                url: msg.content.url
-        },
-        headers: {}
-    }
-
-    options.headers["X-Mashape-Authorization"] = mashape_key;
-
-
-    request.get(options, function(err, r, body) {
-        if (err)
-            res.send(500, err);
-
-        body = JSON.parse(body);
-
-        console.log('Got summary');
-
-        console.log('-----', body);
-
-        summary = body.data.summary;
-        keywords = body.data.keywords;
-
-        var article = new Article({
-            url: url,
-            summary: summary,
-            keywords: keywords,
-            classroom: req.params.classroomId
-        });
-
-        console.log(article);
-
         var options = {
-            uri: 'https://alchemy.p.mashape.com/url/URLGetTitle',
+            uri: 'https://tldr.p.mashape.com/summary',
             qs: {
-                url: url,
-                outputMode: "json"
+                url: msg.content.url
             },
             headers: {}
         }
 
         options.headers["X-Mashape-Authorization"] = mashape_key;
 
-        // pagemunch summary
+
         request.get(options, function(err, r, body) {
-            if (err) {
+            if (err)
                 res.send(500, err);
-                console.log(err);
-            } else {
-                body = JSON.parse(body);
-                console.log('Got title');
-                console.log('-----', body);
-                article.title = body.title;
-                console.log(article);
 
-                var options = {
-                    url: "https://alchemy.p.mashape.com/url/URLGetText",
-                    qs: {
-                        url: url,
-                        outputMode: "json"
-                    },
-                    headers: {}
-                }
+            body = JSON.parse(body);
 
-                options.headers["X-Mashape-Authorization"] = mashape_key;
+            console.log('Got summary');
 
-                request.get(options, function(err, r, body) {
-                    if (err)
-                        res.send(500, err);
+            console.log('-----', body);
 
+            summary = body.data.summary;
+            keywords = body.data.keywords;
+
+            var article = new Article({
+                url: url,
+                summary: summary,
+                keywords: keywords,
+                classroom: req.params.classroomId
+            });
+
+            console.log(article);
+
+            var options = {
+                uri: 'https://alchemy.p.mashape.com/url/URLGetTitle',
+                qs: {
+                    url: url,
+                    outputMode: "json"
+                },
+                headers: {}
+            }
+
+            options.headers["X-Mashape-Authorization"] = mashape_key;
+
+            // pagemunch summary
+            request.get(options, function(err, r, body) {
+                if (err) {
+                    res.send(500, err);
+                    console.log(err);
+                } else {
                     body = JSON.parse(body);
-
-                    console.log('Got raw text');
+                    console.log('Got title');
                     console.log('-----', body);
-                    article.text = body.text;
+                    article.title = body.title;
                     console.log(article);
 
-                    article.save(function(err, obj) {
+                    var options = {
+                        url: "https://alchemy.p.mashape.com/url/URLGetText",
+                        qs: {
+                            url: url,
+                            outputMode: "json"
+                        },
+                        headers: {}
+                    }
+
+                    options.headers["X-Mashape-Authorization"] = mashape_key;
+
+                    request.get(options, function(err, r, body) {
                         if (err)
                             res.send(500, err);
+
+                        body = JSON.parse(body);
+
+                        console.log('Got raw text');
+                        console.log('-----', body);
+                        article.text = body.text;
+                        console.log(article);
+
+                        article.save(function(err, obj) {
+                            if (err)
+                                res.send(500, err);
 
                             //res.send(201, {
                             //	id: obj._id
@@ -394,16 +415,16 @@ function indexContent(msg, ws) {
                             console.log("sending : " + obj._id);
 
                             ws.send(JSON.stringify({
-                            id: obj._id
+                                id: obj._id
                             }), function() {});
 
                             ws.close();
 
+                        });
                     });
-                });
-            }
-        })
-    });
+                }
+            })
+        });
 
 
         ///////////////
