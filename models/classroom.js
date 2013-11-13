@@ -12,10 +12,6 @@ var ClassroomSchema = new Schema({
 	name: {
 		type: String,
 		required: true
-	},
-	url: {
-		type: String,
-		required: false
 	}
 });
 

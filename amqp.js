@@ -8,7 +8,7 @@ module.exports.send = function (messageToDelever)
 
 //var q = "tasks" + hashCode();
 console.log("ws.upgradeReq.url" + messageToDelever.url);
-var q = "tasks" + hashCode();
+var q = "tasks" + hashCode(messageToDelever.url);
 
 console.log("seding message : " + messageToDelever.url);
 console.log("seding message to q: " + q);
@@ -24,12 +24,12 @@ open.then(function(conn) {
 
 }
 
-module.exports.initializeConsumer = function(workerCallback,ws){
+module.exports.initializeConsumer = function(workerCallback,ws, listnQurl){
 // Consumer
 
-console.log("ws.upgradeReq.url" + ws.upgradeReq.url);
+console.log("listnQurl " + listnQurl);
 
-var q = "tasks" + hashCode(ws.upgradeReq.url);
+var q = "tasks" + hashCode(listnQurl);
 
 open.then(function(conn) {
   console.log("consumer initialized");
@@ -38,6 +38,8 @@ open.then(function(conn) {
     ch.assertQueue(q);
     console.log("going to listen on q: " + q);
     ch.consume(q, function(msg){
+
+      console.log("going to call workerCallback: " + msg);
     	workerCallback(msg,ws);
     	ch.ack(msg);
     });
@@ -53,7 +55,7 @@ open.then(function(conn) {
 function hashCode(stringToHash){
     var hash = 0, i, char;
     if (stringToHash.length == 0) return hash;
-    for (i = 0, l = stringToHash.length; i < l; i++) {
+    for (i = 0 ; i < stringToHash.length ; i++) {
         char  = stringToHash.charCodeAt(i);
         hash  = ((hash<<5)-hash)+char;
         hash |= 0; // Convert to 32bit integer
