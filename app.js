@@ -169,13 +169,13 @@ app.get('/classrooms/:classroomId/articles', function(req, res, next) {
 
 app.put('/classrooms/:classroomId/articles', function(req, res, next) {
     console.log('----' + JSON.stringify(req.body));
-    var url = req.body.url;
+    var indexableUrl = req.body.url;
     var summary, keywords = [];
 
-    console.log(req.url);
+    console.log(req.params.classroomId);
     var amqpMessage = {
-        url: req.url,
-        classroomId: req.url.classroomId
+        url: indexableUrl,
+        classroomId: req.params.classroomId
     }
 
     //starts listning on websocket 
@@ -185,7 +185,8 @@ app.put('/classrooms/:classroomId/articles', function(req, res, next) {
 
         //send the message out to rabbit
 
-    amqp.send(amqpMessage);
+    amqp.send(amqpMessage, req.url);
+    res.send(201);
     //}), 1000);
 
 
@@ -298,6 +299,24 @@ app.del('/classrooms/:classroomId/articles/:articleId', function(req, res, next)
     res.send(501);
 });
 
+function indexContentTest(msg, ws) {
+
+        console.log("message content : " + msg.content.toString());
+
+     
+                            ws.send(JSON.stringify({
+                            id: "55555"
+                            }), function(err) { 
+//console.log("send error");
+                                //console.log(err);
+                                //if (err == 'undefined')
+                                //ws.close();
+                            });
+
+                            
+
+    }
+
 function indexContent(msg, ws) {
 
     if (msg !== null) {
@@ -387,17 +406,14 @@ function indexContent(msg, ws) {
                         if (err)
                             res.send(500, err);
 
-                            //res.send(201, {
-                            //	id: obj._id
-                            //});
-
+                          
                             console.log("sending : " + obj._id);
 
                             ws.send(JSON.stringify({
                             id: obj._id
                             }), function() {});
 
-                            ws.close();
+                            //ws.close();                       
 
                     });
                 });
@@ -405,16 +421,10 @@ function indexContent(msg, ws) {
         })
     });
 
-
-        ///////////////
-
-
-
-        //ch.ack(msg);
+        
     }
 }
 
-//amqp.initializeConsumer(indexContent);
 
 /**
  * Start Server
@@ -432,45 +442,30 @@ httpserver.listen(app.get('port'), function() {
 });
 
 //start websocket server
-
 var wss = new WebSocketServer({
     server: httpserver
 });
 
 console.log('websocket server created');
 
-//function startListn(listnQurl) {
-    console.log("startListn");
+    console.log("startListen");
     wss.on('connection', function(ws) {
-            //todo add regEx , DOCA
-            console.log("doca websocket connection started");
 
-            console.log("ws.upgradeReq.url" + ws.upgradeReq.url);
-
-            //console.log(ws.upgradeReq);
-            //if (endsWith(ws.upgradeReq.url, "/article") != -1 && ws.upgradeReq.url == "PUT") {
+       
+            console.log("websocket connection started");
 
             // hash of the article url should come in "url"
             amqp.initializeConsumer(indexContent, ws,ws.upgradeReq.url);
-
-            //var id = setInterval(function() {
-            // console.log(JSON.stringify(new Date()));
-            // ws.send(JSON.stringify(new Date()), function() {});
-            // ws.close();
-            // }, 1000);
-
+         
             console.log('websocket connection open');
 
             ws.on('close', function() {
                 console.log('websocket connection close');
-
-                //   clearInterval(id);
-            });
-            //}
+              
+            });      
         }
 
     );
-//}
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;

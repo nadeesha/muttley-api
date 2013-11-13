@@ -2,22 +2,22 @@
 
 var open = require('amqplib').connect('amqp://Qp8zIdXt:VEO28i7KfIzsRoS-TbzbE-bSDewZDmW_@brown-toadflax-10.bigwig.lshift.net:10686/cVDHQx-GprcK');
 
-module.exports.send = function (messageToDelever)
+module.exports.send = function (messageToDelever, reqUrl)
 {
 // Publisher
 
 //var q = "tasks" + hashCode();
-console.log("ws.upgradeReq.url" + messageToDelever.url);
-var q = "tasks" + hashCode(messageToDelever.url);
+console.log("reqUrl" + reqUrl);
+var q = "tasks" + hashCode(reqUrl);
 
-console.log("seding message : " + messageToDelever.url);
+console.log("seding message : " + reqUrl);
 console.log("seding message to q: " + q);
 open.then(function(conn) {
   var ok = conn.createChannel();
   ok = ok.then(function(ch) {
 
     ch.assertQueue(q);
-    ch.sendToQueue(q, new Buffer(messageToDelever));
+    ch.sendToQueue(q, new Buffer(JSON.stringify(messageToDelever)));
   });
   return ok;
  }).then(null, console.warn);
@@ -40,11 +40,10 @@ open.then(function(conn) {
     ch.consume(q, function(msg){
 
       console.log("going to call workerCallback: " + msg);
-    	workerCallback(msg,ws);
+    	workerCallback(msg, ws);
     	ch.ack(msg);
     });
-    //todo ack should be send after process is done. DOCA
- 	//ch.ack(msg);
+
   });
   return ok;
 }).then(null, console.warn);
